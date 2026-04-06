@@ -6,7 +6,14 @@ export default function Footer() {
       <p className="footer__copy">
         © {new Date().getFullYear()} Feria Americana — Todos los derechos reservados
       </p>
-      <p className="footer__made">Hecho con ♥</p>
+      <a 
+        href="https://santiago-viale-web.vercel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="footer__dev"
+      >
+        Diseñado y desarrollado por Santiago Viale
+      </a>
     </footer>
-  );
+  )
 }
