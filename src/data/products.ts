@@ -41,7 +41,7 @@ export const mockProducts: Product[] = [
     price: 7000,
     image: 'https://images.unsplash.com/photo-1589310243389-96a5483213a8?w=500&q=80',
     category: 'Ropa Hombre',
-    size: ['M', 'L', 'XL'],
+    size: 'S',
     condition: 'Muy bueno',
     available: true,
   },
