@@ -15,12 +15,11 @@ export default function About() {
             Lo que arrancó como un local en su casa — con ropa usada en buen estado que compraba y revendía — fue creciendo 
             de a poco, con trabajo y criterio. Cada pieza seleccionada a mano, nunca botes de ropa al azar.
           </p>
-          <p className="about__body">
-            Hoy Valentino viaja hasta Bolivia para encontrar ropa que valga la pena traer. 
-            Prendas con historia, con estilo, con vida útil por delante. El local creció, 
-            el stock se diversificó, y la propuesta se convirtió en un lugar de referencia 
-            para quienes buscan moda con identidad a precios accesibles.
-          </p>
+<p className="about__body">
+  Hoy el local creció, el stock se diversificó, y la propuesta se convirtió 
+  en un lugar de referencia para quienes buscan moda con identidad a precios accesibles. 
+  Prendas con historia, con estilo, con vida útil por delante.
+</p>
           <p className="about__body">
             Esto es lo que pasa cuando alguien joven apuesta en serio a lo que le gusta.
           </p>
@@ -37,7 +36,6 @@ export default function About() {
           </div>
           <div className="about__stat">
             <span className="about__stat-number">ARG</span>
-            <span className="about__stat-label">hasta Bolivia</span>
           </div>
         </div>
       </div>
