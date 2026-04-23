@@ -4,6 +4,7 @@ export interface Product {
   description: string;
   price: number;
   image: string;
+  gallery?: string[];
   category: Category;
   size?: string;
   condition: 'Excelente' | 'Muy bueno' | 'Bueno';

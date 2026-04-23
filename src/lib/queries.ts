@@ -8,6 +8,7 @@ const PRODUCT_QUERY = `*[_type == "product"] | order(_createdAt desc) {
   description,
   price,
   "image": image.asset->url,
+  "gallery": gallery[].asset->url,
   category,
   size,
   condition,

@@ -1,32 +1,38 @@
-import type { Product } from '../types';
-import { useCart } from '../context/CartContext';
+import { useNavigate } from 'react-router-dom'
+import type { Product } from '../types'
+import { useCart } from '../context/CartContext'
 
 interface Props {
-  product: Product;
+  product: Product
 }
 
 const conditionColors: Record<string, string> = {
   Excelente: '#5a7a4a',
   'Muy bueno': '#7a6a3a',
   Bueno: '#5a5a7a',
-};
+}
 
 export default function ProductCard({ product }: Props) {
-  const { addItem, removeItem, isInCart } = useCart();
-  const inCart = isInCart(product.id);
+  const { addItem, removeItem, isInCart } = useCart()
+  const navigate = useNavigate()
+  const inCart = isInCart(product.id)
 
   const handleToggle = () => {
-    if (!product.available) return;
+    if (!product.available) return
     if (inCart) {
-      removeItem(product.id);
+      removeItem(product.id)
     } else {
-      addItem(product);
+      addItem(product)
     }
-  };
+  }
 
   return (
     <article className={`product-card ${!product.available ? 'product-card--sold' : ''}`}>
-      <div className="product-card__img-wrap">
+      <div
+        className="product-card__img-wrap"
+        onClick={() => navigate(`/producto/${product.id}`)}
+        style={{ cursor: 'pointer' }}
+      >
         <img
           src={product.image}
           alt={product.name}
@@ -48,7 +54,13 @@ export default function ProductCard({ product }: Props) {
       </div>
 
       <div className="product-card__body">
-        <h3 className="product-card__name">{product.name}</h3>
+        <h3
+          className="product-card__name"
+          onClick={() => navigate(`/producto/${product.id}`)}
+          style={{ cursor: 'pointer' }}
+        >
+          {product.name}
+        </h3>
         <p className="product-card__desc">{product.description}</p>
 
         {product.size && (
@@ -71,5 +83,5 @@ export default function ProductCard({ product }: Props) {
         </div>
       </div>
     </article>
-  );
+  )
 }
