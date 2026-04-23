@@ -143,8 +143,9 @@
 
 .product-card__category {
   position: absolute;
-  top: 12px;
+  bottom: 12px;
   right: 12px;
+  top: auto;
   padding: 3px 10px;
   background: rgba(14, 12, 10, 0.7);
   color: var(--cream);
@@ -255,6 +256,8 @@
   padding-top: 0.6rem;
   border-top: 1px solid var(--border-light);
   margin-top: auto;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .product-card__price {
