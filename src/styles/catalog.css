@@ -304,3 +304,12 @@
   font-size: 1.1rem;
   letter-spacing: 0.1em;
 }
+.catalog__infinite-loader {
+  text-align: center;
+  padding: 3rem 0;
+  font-family: var(--font-alt);
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+}
