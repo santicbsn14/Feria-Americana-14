@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import type { Product } from '../types'
 import { useCart } from '../context/CartContext'
+import { imgUrl } from '../lib/sanityClient'
 
 interface Props {
   product: Product
@@ -34,7 +35,7 @@ export default function ProductCard({ product }: Props) {
         style={{ cursor: 'pointer' }}
       >
         <img
-          src={product.image}
+          src={imgUrl(product.image, 400)}
           alt={product.name}
           className="product-card__img"
           loading="lazy"

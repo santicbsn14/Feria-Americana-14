@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getProducts } from '../lib/queries'
 import { useCart } from '../context/CartContext'
 import type { Product } from '../types'
-
+import { imgUrl } from '../lib/sanityClient'
 const conditionColors: Record<string, string> = {
   Excelente: '#5a7a4a',
   'Muy bueno': '#7a6a3a',
@@ -71,7 +71,7 @@ export default function ProductDetail() {
           <div className="detail__gallery">
             <div className="detail__main-img-wrap">
               <img
-                src={allImages[activeImg]}
+                src={imgUrl(allImages[activeImg], 1000)}
                 alt={product.name}
                 className="detail__main-img"
               />
@@ -90,7 +90,7 @@ export default function ProductDetail() {
                     className={`detail__thumb ${activeImg === i ? 'detail__thumb--active' : ''}`}
                     onClick={() => setActiveImg(i)}
                   >
-                    <img src={img} alt={`${product.name} foto ${i + 1}`} />
+                    <img src={imgUrl(img, 200)} alt={`${product.name} foto ${i + 1}`} />
                   </button>
                 ))}
               </div>

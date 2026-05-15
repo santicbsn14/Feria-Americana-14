@@ -21,8 +21,6 @@ export async function getProducts(): Promise<Product[]> {
     if (data && data.length > 0) {
       return data
     }
-    console.log(data)
-    // Si no hay productos en Sanity, usa los mocks
     return mockProducts
   } catch (error) {
     console.warn('No se pudo conectar con Sanity, usando datos mock:', error)
