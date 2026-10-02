@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
 import Header from './components/Header'
 import Hero from './components/Hero'
@@ -7,6 +7,7 @@ import ProductGrid from './components/ProductGrid'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ProductDetail from './components/ProductDetail'
+import AdminPage from './components/admin/AdminPage'
 import './styles/global.css'
 import './styles/header.css'
 import './styles/hero.css'
@@ -16,6 +17,7 @@ import './styles/cart.css'
 import './styles/contact.css'
 import './styles/footer.css'
 import './styles/productDetail.css'
+import './styles/admin.css'
 
 function Home() {
   return (
@@ -31,17 +33,21 @@ function Home() {
 }
 
 function App() {
+  const { pathname } = useLocation()
+  const isAdmin = pathname === '/admin' || pathname.startsWith('/admin/')
+
   return (
     <CartProvider>
       <div className="app">
-        <Header />
+        {!isAdmin && <Header />}
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/producto/:id" element={<ProductDetail />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </main>
-        <Footer />
+        {!isAdmin && <Footer />}
       </div>
     </CartProvider>
   )

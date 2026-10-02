@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { getProducts } from '../lib/queries'
 import type { Product } from '../types'
 import ProductCard from './ProductCard'
+import SkeletonCard from './SkeletonCard'
 
 const ALL = 'Todos'
 const PAGE_SIZE = 8
@@ -87,11 +88,13 @@ export default function ProductGrid() {
         ))}
       </div>
 
-      {loading ? (
-        <div className="catalog__loading">
-          <span>Cargando productos...</span>
-        </div>
-      ) : filtered.length === 0 ? (
+{loading ? (
+  <div className="product-grid">
+    {Array.from({ length: 8 }).map((_, i) => (
+      <SkeletonCard key={i} />
+    ))}
+  </div>
+) : filtered.length === 0 ? (
         <p className="catalog__empty">No hay productos en esta categoría por el momento.</p>
       ) : (
         <>

@@ -313,3 +313,72 @@
   font-size: 1rem;
   letter-spacing: 0.1em;
 }
+@keyframes skeleton-pulse {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--cream-dark) 25%, var(--border-light) 50%, var(--cream-dark) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease infinite;
+  border-radius: var(--radius);
+}
+
+.skeleton-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.skeleton-card__img {
+  width: 100%;
+  aspect-ratio: 4/5;
+}
+
+.skeleton-card__body {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.skeleton-card__title {
+  height: 20px;
+  width: 70%;
+}
+
+.skeleton-card__desc {
+  height: 14px;
+  width: 100%;
+}
+
+.skeleton-card__desc-short {
+  height: 14px;
+  width: 60%;
+}
+
+.skeleton-card__size {
+  height: 28px;
+  width: 80px;
+}
+
+.skeleton-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border-light);
+  margin-top: 0.5rem;
+}
+
+.skeleton-card__price {
+  height: 24px;
+  width: 80px;
+}
+
+.skeleton-card__btn {
+  height: 36px;
+  width: 90px;
+}
