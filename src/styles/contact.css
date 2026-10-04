@@ -1,122 +1,213 @@
+/* ===== Contacto (mismo encabezado y padding que el catálogo) ===== */
 .contact {
-  background: var(--cream);
-  padding: 6rem 2rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 16px;
+  background: var(--paper);
+  color: var(--text);
 }
 
 .contact__inner {
-  max-width: 900px;
-  margin: 0 auto;
-  text-align: center;
+  border-top: 1px solid var(--line-strong);
+  padding: 44px 0 56px;
 }
 
-.contact__divider {
+/* Encabezado */
+.contact__head {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
-.contact__divider::before,
-.contact__divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold-dark), transparent);
-}
-
-.contact__divider-ornament {
-  color: var(--gold);
-  font-size: 1rem;
+.contact__eyebrow {
+  margin-bottom: 12px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--text-3);
 }
 
 .contact__title {
   font-family: var(--font-display);
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: clamp(2.5rem, 4vw + 1rem, 4rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
 
-.contact__subtitle {
-  font-family: var(--font-alt);
-  font-size: 1rem;
-  color: var(--text-muted);
-  font-style: italic;
-  margin-bottom: 3rem;
+.contact__note {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-2);
+  max-width: 340px;
 }
 
-.contact__cards {
+/* Columnas */
+.contact__cols {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  grid-template-columns: minmax(0, 1fr);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
-.contact__card {
-  background: var(--white);
-  border: 1px solid var(--border-light);
-  padding: 2rem 1.5rem;
-  border-radius: var(--radius);
+.contact__col {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  transition: box-shadow var(--transition);
+  align-items: flex-start;
+  padding: 28px 0;
 }
 
-.contact__card:hover {
-  box-shadow: 0 4px 20px var(--shadow);
+.contact__col + .contact__col {
+  border-top: 1px solid var(--line);
 }
 
-.contact__card-icon {
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
+.contact__icon {
+  margin-bottom: 20px;
+  color: var(--ink);
 }
 
-.contact__card-title {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: 0.05em;
+.contact__col-title {
+  margin-bottom: 10px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-3);
 }
 
-.contact__card-text {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  color: var(--text-secondary);
+.contact__text {
+  font-family: var(--font-ui);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text);
 }
 
-.contact__card-sub {
-  font-family: var(--font-alt);
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  font-style: italic;
+.contact__sub {
+  margin-top: 4px;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-2);
 }
 
-.contact__wa-btn {
+.contact__phone,
+.contact__link {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.9rem 2.5rem;
-  background: #25d366;
-  color: #fff;
-  font-family: var(--font-alt);
-  font-size: 1rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  min-height: 44px;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+/* El teléfono va en la línea de texto: el área táctil crece sin mover el layout */
+.contact__phone {
+  margin: -11px 0;
+  text-decoration-color: var(--line-mid);
+}
+
+.contact__link {
+  gap: 6px;
+  margin-top: 8px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+@media (hover: hover) {
+  .contact__phone:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .contact__link:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+/* CTA (mismo estilo que el botón principal del carrito) */
+.contact__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 56px;
+  margin-top: 32px;
+  padding: 0 32px;
+  border: 1px solid var(--ink);
   border-radius: var(--radius);
-  transition: all var(--transition);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 600;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
 }
 
-.contact__wa-btn:hover {
-  background: #1db954;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+@media (hover: hover) {
+  .contact__cta:hover {
+    background: var(--text-2);
+    border-color: var(--text-2);
+  }
 }
 
-@media (max-width: 600px) {
-  .contact { padding: 4rem 1rem; }
-  .contact__title { font-size: 1.8rem; }
+@media (min-width: 768px) {
+  .contact {
+    padding: 0 32px;
+  }
+
+  .contact__inner {
+    padding: 96px 0 120px;
+  }
+
+  .contact__head {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+
+  .contact__note {
+    text-align: right;
+  }
+
+  .contact__cols {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .contact__col {
+    padding: 40px 32px;
+  }
+
+  .contact__col:first-child {
+    padding-left: 0;
+  }
+
+  .contact__col + .contact__col {
+    border-top: none;
+    border-left: 1px solid var(--line);
+  }
+
+  .contact__cta {
+    display: inline-flex;
+    width: auto;
+    margin-top: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact__cta {
+    transition: none;
+  }
 }

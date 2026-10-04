@@ -4,6 +4,7 @@ export interface Product {
   description: string;
   price: number;
   image: string;
+  lqip?: string;
   gallery?: string[];
   category: Category;
   size?: string;

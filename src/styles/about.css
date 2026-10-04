@@ -1,116 +1,160 @@
+/* ===== Nuestra historia (sección negra) ===== */
 .about {
-  background: var(--black);
-  padding: 6rem 2rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.about::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(184, 148, 90, 0.06) 0%, transparent 70%);
-  pointer-events: none;
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .about__inner {
-  max-width: 900px;
+  max-width: 1280px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
+  padding: 64px 16px;
 }
 
-.about__divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+.about__grid {
+  display: grid;
+  gap: 32px;
 }
 
-.about__divider::before,
-.about__divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold-dark), transparent);
-}
-
-.about__divider-ornament {
-  color: var(--gold);
-  font-size: 1rem;
-}
-
-.about__title {
-  font-family: var(--font-display);
-  font-size: 2.5rem;
+/* Izquierda: eyebrow + lead (+ foto opcional) */
+.about__eyebrow {
+  margin-bottom: 20px;
+  font-family: var(--font-ui);
+  font-size: 13px;
   font-weight: 600;
-  color: var(--cream);
-  text-align: center;
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem;
-}
-
-.about__text {
-  margin-bottom: 4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
 }
 
 .about__lead {
   font-family: var(--font-display);
-  font-size: 1.3rem;
   font-style: italic;
-  color: var(--gold);
-  text-align: center;
-  margin-bottom: 2rem;
-  line-height: 1.6;
+  font-weight: 400;
+  font-size: clamp(1.75rem, 2.5vw + 1rem, 2.75rem);
+  line-height: 1.2;
+  color: var(--paper);
 }
 
+.about__img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  margin-top: 32px;
+  filter: grayscale(1);
+}
+
+/* Derecha: párrafos */
 .about__body {
-  font-family: var(--font-body);
-  font-size: 1.05rem;
-  color: var(--cream-dark);
-  line-height: 1.9;
-  margin-bottom: 1.2rem;
-  text-align: center;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.75;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
 }
 
+/* Stats */
 .about__stats {
-  display: flex;
-  justify-content: center;
-  gap: 4rem;
-  border-top: 1px solid var(--charcoal-mid);
-  padding-top: 3rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 48px;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
 }
 
 .about__stat {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
+  flex-direction: column-reverse; /* en el DOM: etiqueta (dt) y después número (dd) */
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 28px 16px 0 0;
+}
+
+.about__stat + .about__stat {
+  padding-left: 16px;
+  border-left: 1px solid color-mix(in srgb, var(--paper) 25%, transparent);
 }
 
 .about__stat-number {
   font-family: var(--font-display);
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--gold);
+  font-weight: 500;
+  font-size: clamp(3rem, 4vw + 1rem, 4rem);
   line-height: 1;
+  color: var(--paper);
 }
 
 .about__stat-label {
-  font-family: var(--font-alt);
-  font-size: 0.8rem;
-  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  text-align: center;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
 }
 
-@media (max-width: 600px) {
-  .about { padding: 4rem 1rem; }
-  .about__title { font-size: 1.8rem; }
-  .about__stats { gap: 2rem; }
+/* Reveal al scrollear */
+.about__reveal {
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+
+.about__reveal--pending {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+@media (min-width: 768px) {
+  .about__inner {
+    padding: 120px 32px;
+  }
+
+  .about__body {
+    font-size: 17px;
+  }
+
+  .about__stats {
+    margin-top: 80px;
+  }
+
+  .about__stat {
+    padding: 36px 32px 0 0;
+  }
+
+  .about__stat + .about__stat {
+    padding-left: 32px;
+  }
+
+  .about__stat-label {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 900px) {
+  .about__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 80px;
+    align-items: start;
+  }
+
+  /* El texto arranca a la altura del lead, no del eyebrow */
+  .about__body {
+    padding-top: 40px;
+  }
+
+  .about__stats {
+    grid-template-columns: repeat(2, minmax(0, 320px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about__reveal {
+    transition: none;
+  }
+
+  .about__reveal--pending {
+    opacity: 1;
+    transform: none;
+  }
 }

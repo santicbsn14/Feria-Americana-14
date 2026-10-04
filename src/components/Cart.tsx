@@ -1,17 +1,98 @@
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import type { RefObject } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useWhatsAppOrder } from '../hooks/useWhatsAppOrder';
+import { imgCrop } from '../lib/sanityClient';
+import { BagIcon, CloseIcon, WhatsAppIcon } from './Icons';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  /** Botón que abrió el panel: recibe el foco al cerrar. */
+  returnFocusRef: RefObject<HTMLButtonElement | null>;
 }
 
-export default function Cart({ isOpen, onClose }: Props) {
+const CONFIRM_MS = 3000;
+const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+export default function Cart({ isOpen, onClose, returnFocusRef }: Props) {
   const { items, removeItem, clearCart, totalItems, totalPrice } = useCart();
   const { sendOrder } = useWhatsAppOrder();
+  const navigate = useNavigate();
 
-  const handleOrder = () => {
-    sendOrder(items, totalPrice);
+  const panelRef = useRef<HTMLElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const confirmTimer = useRef(0);
+  const [confirmClear, setConfirmClear] = useState(false);
+
+  // Escape cierra; Tab queda dentro del panel
+  const onKeyDown = useEffectEvent((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose();
+      return;
+    }
+    const panel = panelRef.current;
+    if (e.key !== 'Tab' || !panel) return;
+    const focusables = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE));
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
+  // Abierto: bloquear scroll, foco al botón de cerrar. Al cerrar, el foco vuelve al header.
+  useEffect(() => {
+    if (!isOpen) return;
+    const returnTo = returnFocusRef.current;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+
+    const handleKey = (e: KeyboardEvent) => onKeyDown(e);
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener('keydown', handleKey);
+      returnTo?.focus({ preventScroll: true });
+    };
+  }, [isOpen, returnFocusRef]);
+
+  useEffect(() => () => window.clearTimeout(confirmTimer.current), []);
+
+  const handleRemove = (index: number, productId: string) => {
+    removeItem(productId);
+    // Que el foco no se pierda: al "Quitar" siguiente, o al botón de cerrar si no quedan
+    requestAnimationFrame(() => {
+      const buttons = listRef.current?.querySelectorAll<HTMLButtonElement>('.cart-item__remove');
+      const next = buttons && buttons.length > 0 ? buttons[Math.min(index, buttons.length - 1)] : null;
+      (next ?? closeRef.current)?.focus();
+    });
+  };
+
+  const handleClear = () => {
+    window.clearTimeout(confirmTimer.current);
+    if (!confirmClear) {
+      setConfirmClear(true);
+      confirmTimer.current = window.setTimeout(() => setConfirmClear(false), CONFIRM_MS);
+      return;
+    }
+    setConfirmClear(false);
+    clearCart();
+    closeRef.current?.focus();
+  };
+
+  // El Header scrollea al hash con scrollToSection (también llegando desde /producto/:id)
+  const goToCatalog = () => {
+    onClose();
+    navigate({ pathname: '/', hash: '#catalogo' });
   };
 
   return (
@@ -19,66 +100,92 @@ export default function Cart({ isOpen, onClose }: Props) {
       <div
         className={`cart-overlay ${isOpen ? 'cart-overlay--visible' : ''}`}
         onClick={onClose}
+        aria-hidden="true"
       />
-      <aside className={`cart ${isOpen ? 'cart--open' : ''}`}>
+      <aside
+        ref={panelRef}
+        className={`cart ${isOpen ? 'cart--open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-title"
+      >
         <div className="cart__header">
-          <h2 className="cart__title">Tu Pedido</h2>
-          <button className="cart__close" onClick={onClose} aria-label="Cerrar carrito">
-            ✕
+          <div className="cart__heading">
+            <h2 id="cart-title" className="cart__title">
+              Tu pedido
+            </h2>
+            {totalItems > 0 && (
+              <span className="cart__count">
+                {totalItems} {totalItems === 1 ? 'prenda' : 'prendas'}
+              </span>
+            )}
+          </div>
+          <button ref={closeRef} type="button" className="cart__close" onClick={onClose} aria-label="Cerrar pedido">
+            <CloseIcon />
           </button>
         </div>
 
         {items.length === 0 ? (
           <div className="cart__empty">
-            <div className="cart__empty-icon">🛍️</div>
-            <p>Tu carrito está vacío</p>
-            <span>Agregá productos del catálogo</span>
+            <BagIcon className="cart__empty-icon" />
+            <p className="cart__empty-title">Tu pedido está vacío</p>
+            <button type="button" className="cart__empty-btn" onClick={goToCatalog}>
+              Ver catálogo
+            </button>
           </div>
         ) : (
           <>
-            <div className="cart__items">
-              {items.map((item) => {
-                return (
-<div key={item.product.id} className="cart-item">
-  <img
-    src={item.product.image}
-    alt={item.product.name}
-    className="cart-item__img"
-  />
-  <div className="cart-item__info">
-    <p className="cart-item__name">{item.product.name}</p>
-    {item.product.size && (
-      <span className="cart-item__size">Talle {item.product.size}</span>
-    )}
-    <span className="cart-item__price">
-      ${item.product.price.toLocaleString('es-AR')}
-    </span>
-  </div>
-  <button
-    className="cart-item__remove"
-    onClick={() => removeItem(item.product.id)}
-    aria-label="Eliminar"
-  >
-    🗑
-  </button>
-</div>
-                );
-              })}
-            </div>
+            <ul ref={listRef} className="cart__items">
+              {items.map(({ product }, index) => (
+                <li key={product.id} className="cart-item">
+                  <span
+                    className="cart-item__media"
+                    style={product.lqip ? { backgroundImage: `url(${product.lqip})` } : undefined}
+                  >
+                    <img
+                      src={imgCrop(product.image, 144, 180)}
+                      alt=""
+                      width={72}
+                      height={90}
+                      loading="lazy"
+                      decoding="async"
+                      className="cart-item__img"
+                    />
+                  </span>
+                  <div className="cart-item__info">
+                    <p className="cart-item__name">{product.name}</p>
+                    {product.size && <span className="cart-item__size">Talle {product.size}</span>}
+                    <span className="cart-item__price">${product.price.toLocaleString('es-AR')}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="cart-item__remove"
+                    onClick={() => handleRemove(index, product.id)}
+                    aria-label={`Quitar ${product.name}`}
+                  >
+                    Quitar
+                  </button>
+                </li>
+              ))}
+            </ul>
 
             <div className="cart__footer">
               <div className="cart__total">
-                <span>Total ({totalItems} {totalItems === 1 ? 'artículo' : 'artículos'})</span>
+                <span>Total</span>
                 <strong>${totalPrice.toLocaleString('es-AR')}</strong>
               </div>
-              <button className="cart__order-btn" onClick={handleOrder}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                Realizar pedido por WhatsApp
+              <button type="button" className="cart__order" onClick={() => sendOrder(items, totalPrice)}>
+                <WhatsAppIcon />
+                Enviar pedido por WhatsApp
               </button>
-              <button className="cart__clear" onClick={clearCart}>
-                Vaciar carrito
+              <button
+                type="button"
+                className={`cart__clear ${confirmClear ? 'cart__clear--confirm' : ''}`}
+                onClick={handleClear}
+              >
+                <span aria-live="polite">
+                  {confirmClear ? '¿Seguro? Tocá de nuevo para vaciar' : 'Vaciar pedido'}
+                </span>
               </button>
             </div>
           </>

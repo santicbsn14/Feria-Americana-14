@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
 import Header from './components/Header'
 import Hero from './components/Hero'
+import Marquee from './components/Marquee'
 import About from './components/About'
 import ProductGrid from './components/ProductGrid'
 import Contact from './components/Contact'
@@ -10,6 +11,7 @@ import ProductDetail from './components/ProductDetail'
 import AdminPage from './components/admin/AdminPage'
 import './styles/global.css'
 import './styles/header.css'
+import './styles/marquee.css'
 import './styles/hero.css'
 import './styles/about.css'
 import './styles/catalog.css'
@@ -22,6 +24,7 @@ import './styles/admin.css'
 function Home() {
   return (
     <>
+      <Marquee />
       <Hero />
       <About />
       <div id="catalogo">

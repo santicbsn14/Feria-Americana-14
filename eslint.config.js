@@ -20,4 +20,11 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // CartContext exporta el provider y el hook useCart juntos (el archivo no se toca)
+    files: ['src/context/CartContext.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])

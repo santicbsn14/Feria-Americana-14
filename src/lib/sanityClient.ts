@@ -8,7 +8,14 @@ export const sanityClient = createClient({
 })
 export function imgUrl(url: string, width: number = 800): string {
   if (!url) return ''
-  return `${url}?auto=format&q=80&w=${width}&fit=max`
+  const sep = url.includes('?') ? '&' : '?'
+  return `${url}${sep}auto=format&q=80&w=${width}&fit=max`
+}
+// Recorte exacto (cards 4:5). Los mock de Unsplash ya traen query string.
+export function imgCrop(url: string, width: number, height: number): string {
+  if (!url) return ''
+  const sep = url.includes('?') ? '&' : '?'
+  return `${url}${sep}auto=format&q=80&w=${width}&h=${height}&fit=crop`
 }
 // Cliente de lectura para el panel admin: sin CDN para ver los cambios al instante. Sin token.
 export const sanityAdminClient = createClient({
