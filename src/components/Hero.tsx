@@ -1,5 +1,5 @@
 // Foto del hero en public/. Si se vacía esta constante, se muestra el placeholder.
-const heroImage = '/imgHero.jpeg';
+const heroImage = '/imgHero.jpg';
 
 export default function Hero() {
   return (
